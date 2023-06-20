@@ -1,0 +1,10 @@
+#!/bin/bash
+#echo $LEGO_CERT_DOMAIN $LEGO_CERT_PATH $LEGO_CERT_KEY_PATH
+
+install -o root -g root -m 0644 "$LEGO_CERT_PATH" /etc/ssl/certs
+install -o root -g root -m 0644 "$LEGO_CERT_PATH" /etc/ssl/certs/${LEGO_CERT_DOMAIN}.pem
+install -o root -g ssl-cert -m 0640 "$LEGO_CERT_KEY_PATH"  /etc/ssl/private
+
+[ ! -d /etc/nginx ] || systemctl reload nginx || true
+[ ! -d /etc/postfix ] || systemctl reload postfix || true
+[ ! -d /etc/dovecot ] || systemctl reload dovecot || true

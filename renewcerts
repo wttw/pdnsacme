@@ -1,0 +1,31 @@
+#!/bin/bash
+
+DOMAINS=(your.server.hostname service.example.com otherservice.example.com)
+EMAIL=<the email address you use with letsencrypt>
+
+RFC2136_NAMESERVER=<your powerdns server>
+RFC2136_TSIG_ALGORITHM=hmac-sha256
+RFC2136_TSIG_KEY=acme
+RFC2136_TSIG_SECRET=<the tsig secret called "acme" on your dns server>
+LEGO_PATH=/usr/local/certs
+
+export RFC2136_NAMESERVER RFC2136_TSIG_ALGORITHM RFC2136_TSIG_KEY RFC2136_TSIG_SECRET LEGO_PATH
+
+ARGS=()
+for d in "${DOMAINS[@]}"; do
+ARGS+=("-d")
+ARGS+=("$d")
+done
+
+case ${1:-renew} in
+  renew)
+    lego --email=$EMAIL --dns=rfc2136 ${ARGS[@]} --accept-tos renew --renew-hook=/usr/local/bin/certhook
+    ;;
+  run)
+    lego --email=$EMAIL --dns=rfc2136 ${ARGS[@]} --accept-tos run --run-hook=/usr/local/bin/certhook
+    ;;
+  *)
+    echo unknown command
+    exit 1
+    ;;
+esac
