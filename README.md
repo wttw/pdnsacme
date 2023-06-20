@@ -26,6 +26,9 @@ need a full-on management system, so I put this hack together.
 
 ## Adding acme challenge zones on your DNS server
 
+First, create a tsig key with `pdnsutil generate-tsig-key acme hmac-sha256`. You'll need it later;
+you can see it with `pdnsutil list-tsig-keys`.
+
 If you run `./pdnsacme www.example.com` it will read the powerdns configuration file to
 get the API endpoint and key (if your user is a member of the pdns group you can do that,
 just the same as pdnsutil does). Then for each hostname given on the commandline it will
